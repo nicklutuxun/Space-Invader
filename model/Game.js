@@ -5,10 +5,14 @@ import Invader from "./Invader.js";
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
+/**
+ * The class of space invader game
+ */
 class Game {
   constructor() {
     this.continue = false;
     this.GAMEOVER = false;
+
     this.tank = new Tank(
       canvas.width / 2 - 25,
       canvas.height - 60,
@@ -28,7 +32,9 @@ class Game {
   }
 
   keyDownHandler(e) {
+    // Do not handle if game has not started
     if (this.continue) {
+      // Pressed space and have left missiles
       if ((e.code == "Space" && this.missiles.length < 10)) {
         let missile = new Missile(
           this.tank.x + this.tank.width / 2 - 5,
@@ -45,6 +51,7 @@ class Game {
       }
     }
 
+    // Pressed Left or Right
     if (e.code == "Right" || e.code == "ArrowRight" || e.code == "Left" || e.code == "ArrowLeft") {
       if (this.GAMEOVER == false) {
         this.continue = true;
@@ -54,6 +61,7 @@ class Game {
     }
   }
 
+  // Display text on screen at start
   initialize() {
     this.canvasText();
   }
@@ -61,11 +69,15 @@ class Game {
   run() {
     ctx.clearRect(0, 0, canvas.width, canvas.height),
       this.canvasText();
+
     this.tank.draw(ctx);
+
+    // Game started
     if (this.continue == true) {
       this.tank.move(canvas.width);
       this.addInvader();
 
+      // Control missles
       if (this.missiles.length != 0) {
         for (let i = 0; i < this.missiles.length; i++) {
           this.missiles[i].draw(ctx);
@@ -74,6 +86,7 @@ class Game {
         this.checkMissileBound();
       }
 
+      // Control invaders
       if (this.invaders.length != 0) {
         for (let i = 0; i < this.invaders.length; i++) {
           this.invaders[i].draw(ctx);
@@ -83,15 +96,18 @@ class Game {
       }
       this.jiggleInvaders();
 
+      // Check collision
       this.checkInvaderMissileCollide();
       this.checkInvaderTankCollide();
     }
   }
 
+  // Helper function to generate random integer on demand
   rand(num) {
     return Math.floor(Math.random() * num);
   }
 
+  // Generate one invader
   addInvader() {
     if (this.rand(200) < 1) {
       let invader = new Invader(
@@ -105,12 +121,14 @@ class Game {
     }
   }
 
+  // Makes invaders jiggle
   jiggleInvaders() {
     if (this.invaders.length == 0) {
       return;
     }
     for (let i = 0; i < this.invaders.length; i++) {
       this.invaders[i].jiggle();
+      // Make sure invader is not out of bounds
       if (this.invaders[i].x <= 0) {
         this.invaders[i].dx = Math.abs(this.invaders[i].dx);
       } else if (this.invaders[i].x >= canvas.width - 40) {
@@ -194,6 +212,7 @@ class Game {
     ctx.fillStyle = "#0095DD";
     ctx.fillText("GAMEOVER!", 8, 20);
     ctx.fillText("Invaders shot down: " + this.destroyInvaderNum, 8, 40);
+    
     this.bgm.pause();
     this.bgm.currentTime = 0;
 
