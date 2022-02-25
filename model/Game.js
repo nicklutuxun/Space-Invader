@@ -31,17 +31,17 @@ class Game {
     if (this.continue) {
       if ((e.code == "Space" && this.missiles.length < 10)) {
         let missile = new Missile(
-        this.tank.x + this.tank.width / 2 - 5,
-        this.tank.y,
-        10,
-        20,
-        "./assets/missile.png"
-      );
-      this.fireSound.play();
-      this.fireSound.currentTime = 0;
-      this.missiles.push(missile);
-      this.missileNum++;
-      return;
+          this.tank.x + this.tank.width / 2 - 5,
+          this.tank.y,
+          10,
+          20,
+          "./assets/missile.png"
+        );
+        this.fireSound.play();
+        this.fireSound.currentTime = 0;
+        this.missiles.push(missile);
+        this.missileNum++;
+        return;
       }
     }
 
@@ -55,27 +55,17 @@ class Game {
   }
 
   initialize() {
-    let tank = new Image();
-    tank.onload = function () {
-      ctx.drawImage(
-        tank,
-        canvas.width / 2 - 25,
-        canvas.height - 60,
-        50,
-        50,);
-    };
-    tank.src = "./assets/tank.png";
     this.canvasText();
   }
 
   run() {
     ctx.clearRect(0, 0, canvas.width, canvas.height),
-    this.canvasText();
+      this.canvasText();
     this.tank.draw(ctx);
     if (this.continue == true) {
       this.tank.move(canvas.width);
       this.addInvader();
-  
+
       if (this.missiles.length != 0) {
         for (let i = 0; i < this.missiles.length; i++) {
           this.missiles[i].draw(ctx);
@@ -83,7 +73,7 @@ class Game {
         }
         this.checkMissileBound();
       }
-  
+
       if (this.invaders.length != 0) {
         for (let i = 0; i < this.invaders.length; i++) {
           this.invaders[i].draw(ctx);
@@ -103,13 +93,13 @@ class Game {
   }
 
   addInvader() {
-    if (this.rand(150) < 1) {
+    if (this.rand(200) < 1) {
       let invader = new Invader(
         Math.max(5, this.rand(canvas.width - 40)),
         40,
         40,
         "./assets/invader.png",
-        this.rand(5)+1
+        this.rand(3) + 1
       );
       this.invaders.push(invader);
     }
@@ -194,13 +184,13 @@ class Game {
     ctx.fillText("Missiles remaining: " + (10 - this.missileNum), 8, 80);
     if (!this.continue) {
       ctx.font = "30px Arial";
-      ctx.fillText("Press \u21E6 or \u21E8 to start" , canvas.width / 2 - 135, canvas.height / 2);
+      ctx.fillText("Press \u21E6 or \u21E8 to start", canvas.width / 2 - 135, canvas.height / 2);
     }
   }
-  
+
   gameover() {
     ctx.clearRect(0, 0, canvas.width, canvas.height),
-    ctx.font = "16px Arial";
+      ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
     ctx.fillText("GAMEOVER!", 8, 20);
     ctx.fillText("Invaders shot down: " + this.destroyInvaderNum, 8, 40);
